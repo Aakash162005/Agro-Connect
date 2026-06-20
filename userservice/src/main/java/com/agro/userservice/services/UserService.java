@@ -5,11 +5,13 @@ import com.agro.userservice.UserRepository;
 import com.agro.userservice.dto.RegisterRequest;
 import com.agro.userservice.dto.UserResponse;
 import com.agro.userservice.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
+    @Autowired
     private UserRepository repository;
 
     public UserResponse register(RegisterRequest request) {
@@ -34,6 +36,22 @@ public class UserService {
         userResponse.setEmail(savedUser.getEmail());
         userResponse.setCreatedAt(savedUser.getCreatedAt());
         userResponse.setUpdatedAt(savedUser.getUpdatedAt());
+
+        return userResponse;
+    }
+
+    public UserResponse getUserProfile(String userId) {
+
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setCreatedAt(user.getCreatedAt());
+        userResponse.setUpdatedAt(user.getUpdatedAt());
 
         return userResponse;
     }
