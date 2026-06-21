@@ -3,6 +3,7 @@ package com.agro.productservice.service;
 
 import com.agro.productservice.dto.ProductRequest;
 import com.agro.productservice.dto.ProductResponse;
+import com.agro.productservice.exception.ProductNotFoundException;
 import com.agro.productservice.model.Product;
 import com.agro.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class ProductService {
 
     public ProductResponse getProductById(Long pId)
     {
-        Product product = repository.findById(pId).orElseThrow(() -> new RuntimeException("Product not found..."));
+        Product product = repository.findById(pId).orElseThrow(() -> new ProductNotFoundException("Product not found..."));
 
         ProductResponse response = new ProductResponse();
 
@@ -90,7 +91,7 @@ public class ProductService {
 
     public ProductResponse updateProduct(ProductRequest request, Long pId)
     {
-        Product product = repository.findById(pId).orElseThrow(() -> new RuntimeException("Product not fount..."));
+        Product product = repository.findById(pId).orElseThrow(() -> new ProductNotFoundException("Product not fount..."));
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -119,7 +120,7 @@ public class ProductService {
 
     public String deleteProduct(Long pId)
     {
-        Product product = repository.findById(pId).orElseThrow(() -> new RuntimeException("Product not fount..."));
+        Product product = repository.findById(pId).orElseThrow(() -> new ProductNotFoundException("Product not fount..."));
 
         repository.delete(product);
 

@@ -3,6 +3,7 @@ package com.agro.productservice.controller;
 import com.agro.productservice.dto.ProductRequest;
 import com.agro.productservice.dto.ProductResponse;
 import com.agro.productservice.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping("/addProduct")
-    public ResponseEntity<ProductResponse> addProduct(@RequestBody ProductRequest request){
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest request){
 
        // return ResponseEntity.ok(productService.addProduct(request));
 
