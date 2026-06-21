@@ -5,6 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="785ea05d-a281-496f-9603-da0049fd470f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/controller/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/dto/OrderRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/dto/OrderResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/model/Order.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/model/OrderStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/repository/OrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orderservice/src/main/java/com/agro/orderservice/service/OrderService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/exception/GlobalExceptionHandler.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/exception/ProductNotFoundException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -27,7 +34,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/productservice" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -61,7 +68,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.UserserviceApplication.executor": "Run",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors",
     "vue.rearranger.settings.migration": "true"
@@ -69,6 +76,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.agro.orderservice.model" />
       <recent name="com.agro.userservice.dto" />
       <recent name="com.agro.userservice.models" />
     </key>
