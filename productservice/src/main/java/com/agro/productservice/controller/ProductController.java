@@ -6,10 +6,9 @@ import com.agro.productservice.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -25,6 +24,30 @@ public class ProductController {
        // return ResponseEntity.ok(productService.addProduct(request));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(request));
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductResponse>> getAllProducts()
+    {
+        return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @GetMapping("/{pId}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long pId)
+    {
+        return ResponseEntity.ok(productService.getProductById(pId));
+    }
+
+    @PutMapping("/{pId}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long pId, @RequestBody ProductRequest request)
+    {
+        return ResponseEntity.ok(productService.updateProduct( request ,pId));
+    }
+
+    @DeleteMapping("/{pId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long pId)
+    {
+        return ResponseEntity.ok(productService.deleteProduct(pId));
     }
 
 
