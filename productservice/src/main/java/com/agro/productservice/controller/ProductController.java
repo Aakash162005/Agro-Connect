@@ -19,7 +19,7 @@ public class ProductController {
 
     ProductService productService;
 
-    @PostMapping("/addProduct")
+    @PostMapping()
     public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest request){
 
        // return ResponseEntity.ok(productService.addProduct(request));
@@ -27,7 +27,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(request));
     }
 
-    @GetMapping("/products")
+    @GetMapping()
     public ResponseEntity<List<ProductResponse>> getAllProducts()
     {
         return ResponseEntity.ok(productService.getAllProducts());
