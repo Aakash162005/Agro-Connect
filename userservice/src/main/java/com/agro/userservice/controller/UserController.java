@@ -1,5 +1,7 @@
 package com.agro.userservice.controller;
 
+import com.agro.userservice.dto.LoginRequest;
+import com.agro.userservice.dto.LoginResponse;
 import com.agro.userservice.dto.RegisterRequest;
 import com.agro.userservice.dto.UserResponse;
 import com.agro.userservice.services.UserService;
@@ -24,6 +26,12 @@ public class UserController {
     public ResponseEntity<UserResponse> register (@Valid @RequestBody RegisterRequest request)
     {
         return ResponseEntity.ok(userService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request)
+    {
+        return ResponseEntity.ok(userService.login(request));
     }
 
 }

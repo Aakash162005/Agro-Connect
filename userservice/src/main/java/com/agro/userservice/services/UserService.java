@@ -1,18 +1,35 @@
 package com.agro.userservice.services;
 
 
-import com.agro.userservice.UserRepository;
+import com.agro.userservice.repository.UserRepository;
+import com.agro.userservice.dto.LoginRequest;
+import com.agro.userservice.dto.LoginResponse;
 import com.agro.userservice.dto.RegisterRequest;
 import com.agro.userservice.dto.UserResponse;
 import com.agro.userservice.models.User;
+import com.agro.userservice.services.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository repository;
+
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserRepository repository;
+    private final JwtUtil jwtUtil;
+
+    public UserService(UserRepository repository,
+                       PasswordEncoder passwordEncoder,
+                       JwtUtil jwtUtil) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+
 
     public UserResponse register(RegisterRequest request) {
 
@@ -23,10 +40,12 @@ public class UserService {
 
         User user = new User();
 
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(encodedPassword);
 
         User savedUser = repository.save(user);
         UserResponse userResponse = new UserResponse();
@@ -54,5 +73,23 @@ public class UserService {
         userResponse.setUpdatedAt(user.getUpdatedAt());
 
         return userResponse;
+    }
+
+    public LoginResponse login(LoginRequest request)
+    {
+        User user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Wrong password");
+        }
+
+
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new LoginResponse(token, "Login successful");
+
     }
 }

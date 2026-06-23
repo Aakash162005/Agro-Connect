@@ -25,7 +25,7 @@ import java.util.List;
 public class OrderService {
 
     private OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     public OrderResponse createOrder(OrderRequest request) {
 
@@ -34,8 +34,8 @@ public class OrderService {
 
         Order order = new Order();
 
-        order.setUserId(user.getUId());
-        order.setProductId(product.getPId());
+        order.setUserId(user.getId());
+        order.setProductId(product.getId());
         order.setQuantity(request.getQuantity());
         order.setTotalPrice(product.getPrice() * request.getQuantity());
 
@@ -64,9 +64,10 @@ public class OrderService {
     private ProductResponse getProduct(Long productId) {
 
         try {
-            return webClient
+            return webClientBuilder
+                    .build()
                     .get()
-                    .uri("http://localhost:8082/api/products/" + productId)
+                    .uri("http://PRODUCT-SERVICE/api/products/" + productId)
                     .retrieve()
                     .bodyToMono(ProductResponse.class)
                     .block();
@@ -81,9 +82,10 @@ public class OrderService {
     private UserResponse getUser(String userId)
     {
         try {
-            return webClient
+            return webClientBuilder
+                    .build()
                     .get()
-                    .uri("http://localhost:8081/api/users/"+userId)
+                    .uri("http://USER-SERVICE/api/users/" + userId)
                     .retrieve()
                     .bodyToMono(UserResponse.class)
                     .block();
