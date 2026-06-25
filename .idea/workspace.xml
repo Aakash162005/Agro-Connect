@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="785ea05d-a281-496f-9603-da0049fd470f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/com/agro/api_gateway/config/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/com/agro/api_gateway/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/com/agro/api_gateway/util/JwtUtil.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/exception/GlobalExceptionHandler.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/exception/ProductNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/productservice/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/controller/ProductController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/dto/ProductRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/productservice/src/main/java/com/agro/productservice/dto/ProductRequest.java" afterDir="false" />
