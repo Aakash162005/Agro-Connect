@@ -1,5 +1,6 @@
 package com.agro.productservice.controller;
 
+import com.agro.productservice.dto.DashboardProductResponse;
 import com.agro.productservice.dto.ProductRequest;
 import com.agro.productservice.dto.ProductResponse;
 import com.agro.productservice.service.ProductService;
@@ -131,6 +132,13 @@ public class ProductController {
         return ResponseEntity.ok(
                 productService.getProductCount());
 
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<DashboardProductResponse> getStatistics() {
+
+        return ResponseEntity.ok(
+                productService.getStatistics());
     }
 
 }

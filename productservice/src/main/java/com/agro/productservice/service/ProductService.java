@@ -1,6 +1,7 @@
 package com.agro.productservice.service;
 
 
+import com.agro.productservice.dto.DashboardProductResponse;
 import com.agro.productservice.dto.ProductRequest;
 import com.agro.productservice.dto.ProductResponse;
 import com.agro.productservice.dto.UserResponse;
@@ -332,6 +333,16 @@ public class ProductService {
 
         return repository.count();
 
+    }
+
+    public DashboardProductResponse getStatistics() {
+
+        DashboardProductResponse response =
+                new DashboardProductResponse();
+
+        response.setTotalProducts(repository.count());
+
+        return response;
     }
 
 }
