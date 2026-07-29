@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     long countByStatus(OrderStatus status);
 
-    Double sumTotalPriceByStatus(OrderStatus status);
+
 
     @Query("""
 SELECT COALESCE(SUM(o.totalPrice),0)
@@ -24,5 +24,6 @@ FROM Order o
 WHERE o.status='DELIVERED'
 """)
     Double getTotalRevenue();
+
 
 }
