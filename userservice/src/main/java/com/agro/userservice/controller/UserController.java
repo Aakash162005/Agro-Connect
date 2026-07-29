@@ -1,9 +1,6 @@
 package com.agro.userservice.controller;
 
-import com.agro.userservice.dto.LoginRequest;
-import com.agro.userservice.dto.LoginResponse;
-import com.agro.userservice.dto.RegisterRequest;
-import com.agro.userservice.dto.UserResponse;
+import com.agro.userservice.dto.*;
 import com.agro.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -44,6 +41,13 @@ public class UserController {
 
         return ResponseEntity.ok(userService.getUserCount());
 
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<DashboardUserResponse> getStatistics() {
+
+        return ResponseEntity.ok(
+                userService.getStatistics());
     }
 
 }

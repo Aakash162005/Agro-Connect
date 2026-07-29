@@ -1,11 +1,9 @@
 package com.agro.userservice.services;
 
 
+import com.agro.userservice.dto.*;
+import com.agro.userservice.models.UserRole;
 import com.agro.userservice.repository.UserRepository;
-import com.agro.userservice.dto.LoginRequest;
-import com.agro.userservice.dto.LoginResponse;
-import com.agro.userservice.dto.RegisterRequest;
-import com.agro.userservice.dto.UserResponse;
 import com.agro.userservice.models.User;
 import com.agro.userservice.services.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,5 +123,23 @@ public class UserService {
 
         return repository.count();
 
+    }
+
+    public DashboardUserResponse getStatistics() {
+
+        DashboardUserResponse response = new DashboardUserResponse();
+
+        response.setTotalUsers(repository.count());
+
+        response.setTotalCustomers(
+                repository.countByRole(UserRole.CUSTOMER));
+
+        response.setTotalShopkeepers(
+                repository.countByRole(UserRole.SHOPKEEPER));
+
+        response.setTotalAdmins(
+                repository.countByRole(UserRole.ADMIN));
+
+        return response;
     }
 }
