@@ -42,15 +42,24 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Long id, @RequestBody UpdateOrderStatusRequest request)
-    {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, request));
+    public ResponseEntity<OrderResponse> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateOrderStatusRequest request,
+            @RequestHeader("X-User-Email") String email,
+            @RequestHeader("X-User-Role") String role) {
+
+        return ResponseEntity.ok(
+                orderService.updateOrderStatus(id, request, email, role));
     }
 
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long id) {
+    public ResponseEntity<OrderResponse> cancelOrder(
+            @PathVariable Long id,
+            @RequestHeader("X-User-Email") String email,
+            @RequestHeader("X-User-Role") String role) {
 
-        return ResponseEntity.ok(orderService.cancelOrder(id));
+        return ResponseEntity.ok(
+                orderService.cancelOrder(id, email, role));
     }
 
     @GetMapping("/my-orders")
@@ -60,4 +69,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getMyOrders(email));
     }
 
+    @GetMapping("/shopkeeper")
+    public ResponseEntity<List<OrderResponse>> getShopkeeperOrders(
+            @RequestHeader("X-User-Email") String email) {
+
+        return ResponseEntity.ok(
+                orderService.getShopkeeperOrders(email));
+    }
 }

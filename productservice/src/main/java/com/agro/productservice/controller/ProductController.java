@@ -54,9 +54,13 @@ public class ProductController {
     }
 
     @DeleteMapping("/{pId}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long pId)
-    {
-        return ResponseEntity.ok(productService.deleteProduct(pId));
+    public ResponseEntity<String> deleteProduct(
+            @PathVariable Long pId,
+            @RequestHeader("X-User-Email") String email,
+            @RequestHeader("X-User-Role") String role) {
+
+        return ResponseEntity.ok(
+                productService.deleteProduct(pId, email, role));
     }
 
     // Search Product
@@ -110,6 +114,15 @@ public class ProductController {
 
         return ResponseEntity.ok(
                 productService.getProductsByShopkeeper(shopkeeperId));
+    }
+
+    @PatchMapping("/{id}/decrease-stock")
+    public ResponseEntity<ProductResponse> decreaseStock(
+            @PathVariable Long id,
+            @RequestParam Integer quantity){
+
+        return ResponseEntity.ok(
+                productService.decreaseStock(id, quantity));
     }
 
 }

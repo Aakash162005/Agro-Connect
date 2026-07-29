@@ -49,6 +49,8 @@ public class OrderService {
 
         ProductResponse product = getProduct(request.getProductId());
 
+        decreaseProductStock(product.getId(), request.getQuantity());
+
         Order order = new Order();
 
         order.setUserId(user.getId());
@@ -139,15 +141,52 @@ public class OrderService {
 
     // ================= UPDATE ORDER STATUS =================
 
-    public OrderResponse updateOrderStatus(Long id, UpdateOrderStatusRequest request) {
+    public OrderResponse updateOrderStatus(
+            Long id,
+            UpdateOrderStatusRequest request,
+            String email,
+            String role) {
 
+        // Get Order
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+                .orElseThrow(() ->
+                        new OrderNotFoundException("Order not found"));
 
+        // Get Logged-in User
+        UserResponse user;
+
+        try {
+
+            user = webClientBuilder
+                    .build()
+                    .get()
+                    .uri("http://USER-SERVICE/api/users/email/" + email)
+                    .retrieve()
+                    .bodyToMono(UserResponse.class)
+                    .block();
+
+        } catch (WebClientResponseException.NotFound ex) {
+
+            throw new UserNotFoundException("User not found");
+        }
+
+        // Get Product Details
+        ProductResponse product = getProduct(order.getProductId());
+
+        // Authorization Check
+        if (!role.equals("ADMIN")
+                && !product.getShopkeeperId().equals(user.getId())) {
+
+            throw new RuntimeException(
+                    "You are not allowed to update this order");
+        }
+
+        // Update Status
         order.setStatus(request.getStatus());
 
         Order updatedOrder = orderRepository.save(order);
 
+        // Response
         OrderResponse response = new OrderResponse();
 
         response.setOrderId(updatedOrder.getOrderId());
@@ -164,11 +203,50 @@ public class OrderService {
 
     // ================= CANCEL ORDER =================
 
-    public OrderResponse cancelOrder(Long id) {
+    public OrderResponse cancelOrder(
+            Long id,
+            String email,
+            String role) {
 
+        // Get Order
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+                .orElseThrow(() ->
+                        new OrderNotFoundException("Order not found"));
 
+        // Get Logged-in User
+        UserResponse user;
+
+        try {
+
+            user = webClientBuilder
+                    .build()
+                    .get()
+                    .uri("http://USER-SERVICE/api/users/email/" + email)
+                    .retrieve()
+                    .bodyToMono(UserResponse.class)
+                    .block();
+
+        } catch (WebClientResponseException.NotFound ex) {
+
+            throw new UserNotFoundException("User not found");
+        }
+
+        // Authorization
+        if (!role.equals("ADMIN")
+                && !order.getUserId().equals(user.getId())) {
+
+            throw new RuntimeException(
+                    "You are not allowed to cancel this order");
+        }
+
+        // Optional: Don't allow cancelling completed orders
+        if (order.getStatus() == OrderStatus.DELIVERED) {
+
+            throw new RuntimeException(
+                    "Delivered order cannot be cancelled");
+        }
+
+        // Cancel
         order.setStatus(OrderStatus.CANCELLED);
 
         Order cancelledOrder = orderRepository.save(order);
@@ -227,6 +305,93 @@ public class OrderService {
         }
 
         return responseList;
+    }
+
+    private void decreaseProductStock(Long productId,
+                                      Integer quantity){
+
+        try{
+
+            webClientBuilder
+                    .build()
+                    .patch()
+                    .uri("http://PRODUCT-SERVICE/api/products/"
+                            + productId
+                            + "/decrease-stock?quantity="
+                            + quantity)
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+
+        }catch(Exception ex){
+
+            throw new RuntimeException(
+                    "Unable to place order : Product out of stock");
+        }
+
+    }
+
+    public List<OrderResponse> getShopkeeperOrders(String email) {
+
+        // Step 1 : Get shopkeeper details
+        UserResponse user = webClientBuilder
+                .build()
+                .get()
+                .uri("http://USER-SERVICE/api/users/email/" + email)
+                .retrieve()
+                .bodyToMono(UserResponse.class)
+                .block();
+
+        // Step 2 : Get all products of this shopkeeper
+        ProductResponse[] products = webClientBuilder
+                .build()
+                .get()
+                .uri("http://PRODUCT-SERVICE/api/products/shopkeeper/"
+                        + user.getId())
+                .retrieve()
+                .bodyToMono(ProductResponse[].class)
+                .block();
+
+        List<Long> productIds = new ArrayList<>();
+
+        if (products != null) {
+            for (ProductResponse p : products) {
+                productIds.add(p.getId());
+            }
+        }
+
+        if (productIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Step 3 : Find orders
+        List<Order> orders =
+                orderRepository.findByProductIdIn(productIds);
+
+        return convertToResponse(orders);
+    }
+
+    private List<OrderResponse> convertToResponse(List<Order> orders){
+
+        List<OrderResponse> responses = new ArrayList<>();
+
+        for(Order order : orders){
+
+            OrderResponse response = new OrderResponse();
+
+            response.setOrderId(order.getOrderId());
+            response.setUserId(order.getUserId());
+            response.setProductId(order.getProductId());
+            response.setQuantity(order.getQuantity());
+            response.setTotalPrice(order.getTotalPrice());
+            response.setStatus(order.getStatus());
+            response.setCreatedAt(order.getCreatedAt());
+            response.setUpdatedAt(order.getUpdatedAt());
+
+            responses.add(response);
+        }
+
+        return responses;
     }
 
 }

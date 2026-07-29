@@ -4,6 +4,7 @@ package com.agro.productservice.service;
 import com.agro.productservice.dto.ProductRequest;
 import com.agro.productservice.dto.ProductResponse;
 import com.agro.productservice.dto.UserResponse;
+import com.agro.productservice.exception.OutOfStockException;
 import com.agro.productservice.exception.ProductNotFoundException;
 import com.agro.productservice.exception.UserNotFoundException;
 import com.agro.productservice.model.Product;
@@ -167,14 +168,45 @@ public class ProductService {
 
     }
 
-    public String deleteProduct(Long pId)
-    {
-        Product product = repository.findById(pId).orElseThrow(() -> new ProductNotFoundException("Product not fount..."));
+
+    public String deleteProduct(Long pId,
+                                String email,
+                                String role) {
+
+        Product product = repository.findById(pId)
+                .orElseThrow(() ->
+                        new ProductNotFoundException("Product not found"));
+
+        UserResponse user;
+
+        try {
+
+            user = webClientBuilder
+                    .build()
+                    .get()
+                    .uri("http://USER-SERVICE/api/users/email/" + email)
+                    .retrieve()
+                    .bodyToMono(UserResponse.class)
+                    .block();
+
+        } catch (WebClientResponseException.NotFound ex) {
+
+            throw new UserNotFoundException("User not found");
+        }
+
+        if (!product.getShopkeeperId().equals(user.getId())
+                && !role.equals("ADMIN")) {
+
+            throw new RuntimeException(
+                    "You are not allowed to delete this product");
+        }
 
         repository.delete(product);
 
-        return "Product detele successfully...";
+        return "Product deleted successfully";
     }
+
+
 
     // Search
     public List<ProductResponse> searchProducts(String keyword) {
@@ -265,6 +297,35 @@ public class ProductService {
                 repository.findByShopkeeperId(shopkeeperId);
 
         return convertToResponse(products);
+    }
+
+
+    public ProductResponse decreaseStock(Long id, Integer quantity) {
+
+        Product product = repository.findById(id)
+                .orElseThrow(() ->
+                        new ProductNotFoundException("Product not found"));
+
+        if(product.getQuantity() < quantity){
+            throw new OutOfStockException("Insufficient stock");
+        }
+
+        product.setQuantity(product.getQuantity() - quantity);
+
+        Product updated = repository.save(product);
+
+        ProductResponse response = new ProductResponse();
+
+        response.setId(updated.getPId());
+        response.setName(updated.getName());
+        response.setDescription(updated.getDescription());
+        response.setPrice(updated.getPrice());
+        response.setQuantity(updated.getQuantity());
+        response.setCategory(updated.getCategory());
+        response.setImageUrl(updated.getImageUrl());
+        response.setShopkeeperId(updated.getShopkeeperId());
+
+        return response;
     }
 
 }
