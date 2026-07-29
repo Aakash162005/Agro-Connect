@@ -125,4 +125,12 @@ public class ProductController {
                 productService.decreaseStock(id, quantity));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getProductCount() {
+
+        return ResponseEntity.ok(
+                productService.getProductCount());
+
+    }
+
 }

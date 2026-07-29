@@ -1,5 +1,6 @@
 package com.agro.orderservice.service;
 
+import com.agro.orderservice.dto.AdminDashboardResponse;
 import com.agro.orderservice.dto.OrderRequest;
 import com.agro.orderservice.dto.OrderResponse;
 import com.agro.orderservice.dto.UpdateOrderStatusRequest;
@@ -392,6 +393,33 @@ public class OrderService {
         }
 
         return responses;
+    }
+
+    public AdminDashboardResponse getDashboard() {
+
+        AdminDashboardResponse response = new AdminDashboardResponse();
+
+        response.setTotalOrders(orderRepository.count());
+
+        response.setPendingOrders(
+                orderRepository.countByStatus(OrderStatus.PENDING));
+
+        response.setConfirmedOrders(
+                orderRepository.countByStatus(OrderStatus.CONFIRMED));
+
+        response.setShippedOrders(
+                orderRepository.countByStatus(OrderStatus.SHIPPED));
+
+        response.setDeliveredOrders(
+                orderRepository.countByStatus(OrderStatus.DELIVERED));
+
+        response.setCancelledOrders(
+                orderRepository.countByStatus(OrderStatus.CANCELLED));
+
+        response.setTotalRevenue(
+                orderRepository.getTotalRevenue());
+
+        return response;
     }
 
 }

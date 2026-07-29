@@ -328,4 +328,10 @@ public class ProductService {
         return response;
     }
 
+    public long getProductCount() {
+
+        return repository.count();
+
+    }
+
 }

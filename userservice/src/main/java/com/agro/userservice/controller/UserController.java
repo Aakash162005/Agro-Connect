@@ -39,4 +39,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getUserCount() {
+
+        return ResponseEntity.ok(userService.getUserCount());
+
+    }
+
 }

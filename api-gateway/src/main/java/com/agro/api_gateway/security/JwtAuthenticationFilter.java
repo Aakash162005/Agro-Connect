@@ -77,7 +77,19 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
         // ===== ROLE-BASED ACCESS CONTROL (RBAC) =====
 
-        // 1. PRODUCT ROUTES
+        // ================= ADMIN APIs =================
+
+        if (path.startsWith("/api/admin")
+                && !role.equals("ADMIN")) {
+
+            exchange.getResponse()
+                    .setStatusCode(HttpStatus.FORBIDDEN);
+
+            return exchange.getResponse().setComplete();
+        }
+
+        // ================= PRODUCT ROUTES =================
+
         if (path.startsWith("/api/products")) {
             // Only ADMIN and SHOPKEEPER can add (POST), update (PUT), or delete (DELETE) products
             if ((method == HttpMethod.POST ||

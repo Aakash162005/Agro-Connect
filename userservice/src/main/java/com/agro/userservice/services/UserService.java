@@ -120,4 +120,10 @@ public class UserService {
 
         return response;
     }
+
+    public long getUserCount() {
+
+        return repository.count();
+
+    }
 }

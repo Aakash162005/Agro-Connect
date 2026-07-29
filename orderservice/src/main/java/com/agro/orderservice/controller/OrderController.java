@@ -1,5 +1,6 @@
 package com.agro.orderservice.controller;
 
+import com.agro.orderservice.dto.AdminDashboardResponse;
 import com.agro.orderservice.dto.OrderRequest;
 import com.agro.orderservice.dto.OrderResponse;
 import com.agro.orderservice.dto.UpdateOrderStatusRequest;
@@ -75,5 +76,12 @@ public class OrderController {
 
         return ResponseEntity.ok(
                 orderService.getShopkeeperOrders(email));
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<AdminDashboardResponse> getDashboard() {
+
+        return ResponseEntity.ok(orderService.getDashboard());
+
     }
 }
