@@ -1,0 +1,75 @@
+services:
+
+  discovery-server:
+    build: ./discovery-server
+    container_name: agroconnect-discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - agro-network
+
+  userservice:
+    build: ./userservice
+    container_name: agroconnect-userservice
+    ports:
+      - "8081:8081"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/agrodb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres123
+    depends_on:
+      - discovery-server
+    networks:
+      - agro-network
+
+  productservice:
+    build: ./productservice
+    container_name: agroconnect-productservice
+    ports:
+      - "8082:8082"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/agrodb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres123
+    depends_on:
+      - discovery-server
+    networks:
+      - agro-network
+
+  orderservice:
+    build: ./orderservice
+    container_name: agroconnect-orderservice
+    ports:
+      - "8083:8083"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/agrodb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres123
+    depends_on:
+      - discovery-server
+      - userservice
+      - productservice
+    networks:
+      - agro-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: agroconnect-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+      - userservice
+      - productservice
+      - orderservice
+    networks:
+      - agro-network
+
+networks:
+  agro-network:
+    driver: bridge
